@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-t=(3hr6(^lzi9uqxfw@-+9p^q+!zh*$o$hpx8@=4p+155s%8s-'
+SECRET_KEY = 'django-insecure-al@a##5#8x0a7%dtj19t%dts=jl#yi-9b8l&_d^h%8=+q8za)='
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -55,8 +55,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -101,8 +100,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Custom User
-AUTH_USER_MODEL = "blog.User"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
