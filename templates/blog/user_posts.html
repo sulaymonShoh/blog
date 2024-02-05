@@ -4,42 +4,32 @@
     <main role="main" class="container">
         <div class="row">
             <div class="col-md-8">
-                <div class="alert alert-{{ message.tags }}">
-                    <h3>Django messages might be shown here</h3>
-                </div>
+                {% if messages %}
+                	{% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            <h6>Django messages might be shown here</h6>
+                        </div>
+                	{% endfor %}
+                {% endif %}
+            
                 <h1 class="mb-3">Posts by Andrew Ng </h1>
 
+            {% for post in posts %}
+            	
+            
                 <article class="media content-section">
                     <img class="rounded-circle article-img" src="{% static 'andrew.jpeg' %}">
                     <div class="media-body">
                         <div class="article-metadata">
-                            <a class="mr-2" href="user_posts.html">Andrew Ng</a>
-                            <small class="text-muted">Aug 21, 2019</small>
+                            <a class="mr-2" href="user_posts.html">{{ post.author.first_name }} {{ post.author.last_name }}</a>
+                            <small class="text-muted">{{ post.published }}</small>
                         </div>
-                        <h2><a class="article-title" href="post_detail.html">AI in Latin America: Announcing our first
-                            international office in Colombia</a></h2>
-                            <p class="article-content">I am excited to announce the opening of our office in Medellín,
-                                Colombia.
-                                The office will serve as the Latin American headquarters for three of the companies in
-                                our AI ecosystem</p>
+                        <h2><a class="article-title" href="post_detail.html">{{ post.title }}</a></h2>
+                            <p class="article-content">{{ post.content }}</p>
                     </div>
                 </article>
-                <article class="media content-section">
-                    <img class="rounded-circle article-img" src="{% static 'andrew.jpeg' %}">
-                    <div class="media-body">
-                        <div class="article-metadata">
-                            <a class="mr-2" href="user_posts.html">Andrew Ng</a>
-                            <small class="text-muted">Aug 21, 2019</small>
-                        </div>
-                        <h2><a class="article-title" href="post_detail.html">Introducing the AI Transformation
-                            Playbook</a></h2>
-                            <p class="article-content">Dear friends,
-                                I’m excited to share with you the AI Transformation Playbook. Drawn from my experience
-                                leading Google Brain,
-                                Baidu’s AI Group, and Landing AI, this Playbook provides a roadmap for your company to
-                                transform into a great AI company.</p>
-                    </div>
-                </article>
+                
+            {% endfor %}
 
 
             </div>

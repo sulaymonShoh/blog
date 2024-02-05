@@ -14,8 +14,8 @@
                             <a class="mr-2" href="user_posts.html">{{ post.author.first_name }} {{ post.author.last_name }}</a>
                             <small class="text-muted">Feb 19, 2023</small>
                             <div>
-                                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="#">Update</a>
-                                <a class="btn btn-danger btn-sm mt-1 mb-1" href="post_confirm_delete.html">Delete</a>
+                                <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'blog:post_update' post.id %}">Update</a>
+                                <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'blog:post_delete' post.id %}">Delete</a>
                             </div>
 
                         </div>
