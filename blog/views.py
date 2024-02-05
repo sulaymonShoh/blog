@@ -16,6 +16,15 @@ class HomePageView(View):
         return render(request, 'blog/home.html', {'posts': posts})
 
 
+def home_page(request):
+    if request.user.is_authenticated:
+        posts = Post.objects.exclude(author=request.user).filter(is_active=True).order_by('published')
+    else:
+        posts = Post.objects.all().filter(is_active=True).order_by('published')
+    # posts = posts.filter(is_active=True).order_by('published')
+    return render(request, 'blog/home.html', {'posts': posts})
+
+
 class AboutView(TemplateView):
     template_name = 'blog/about.html'
 
@@ -41,13 +50,17 @@ class PostDetailView(DetailView):
     template_name = 'blog/post_detail.html'
 
 
+def post_detail(request, pk):
+    post = Post.objects.get(pk=pk)
+    return render(request, 'blog/post_detail.html', {'post': post})
+
+
 class PostUpdateView(UpdateView):
     model = Post
     fields = ['title', 'content']
     template_name = 'blog/post_edit.html'
     success_url = reverse_lazy('blog:post_detail')
     success_message = "Post updated"
-
 
 
 class PostDeleteView(SuccessMessageMixin, DeleteView):

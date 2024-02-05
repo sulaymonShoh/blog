@@ -3,23 +3,26 @@
 {% load static %}
 
 {% block body %}
-    `<main role="main" class="container">
+    `
+    <main role="main" class="container">
         <div class="row">
             <div class="col-md-8">
                 {% include 'blog/messages.html' %}
 
-            {% for post in posts %}
-            	<article class="media content-section">
-                    <img class="rounded-circle article-img" src="{% static post.author.avatar %}">
-                    <div class="media-body">
-                        <div class="article-metadata">
-                            <a class="mr-2" href="{% url 'blog:user-post' post.author %}">{{ post.author.first_name }} {{ post.auhtor.last_name }}</a>
-                            <small class="text-muted">{{ post.published }}</small>
+                {% for post in posts %}
+                    <article class="media content-section">
+                        <img class="rounded-circle article-img" src="{{ post.author.avatar.url }}">
+                        <div class="media-body">
+                            <div class="article-metadata">
+                                <a class="mr-2"
+                                   href="{% url 'blog:user-post' post.author %}">{{ post.author.first_name }} {{ post.auhtor.last_name }}</a>
+                                <small class="text-muted">{{ post.published }}</small>
+                            </div>
+                            <h5><a class="article-title"
+                                   href="{% url 'blog:post_detail' post.id %}">{{ post.title }}</a></h5>
                         </div>
-                        <h5><a class="article-title" href="{% url 'blog:post_detail' post.id %}">{{ post.title }}</a></h5>
-                    </div>
-                </article>
-            {% endfor %}
+                    </article>
+                {% endfor %}
 
             </div>
             {% include 'blog/sidebar.html' %}

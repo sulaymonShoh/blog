@@ -1,7 +1,7 @@
 from django.urls import path
 
 from blog.views import HomePageView, AboutView, NewPostView, UserPostView, PostDetailView, PostDeleteView, \
-    PostUpdateView, RegisterView, LoginView, LogoutView
+    PostUpdateView, RegisterView, LoginView, LogoutView, home_page, post_detail
 
 app_name = 'blog'
 urlpatterns = [
@@ -9,11 +9,15 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
 
-    path('', HomePageView.as_view(), name="home-page"),
+    # path('', HomePageView.as_view(), name="home-page"),
+    path('', home_page, name="home-page"),
     path('about/', AboutView.as_view(), name="about"),
     path('new-post/', NewPostView.as_view(), name="new-post"),
     path('user-post/<str:author>/', UserPostView.as_view(), name="user-post"),
-    path('post/<int:pk>/', PostDetailView.as_view(), name='post_detail'),
+
+    # path('post/<int:pk>/', PostDetailView.as_view(), name='post_detail'),
+    path('post/<int:pk>/', post_detail, name='post_detail'),
+
     path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post_update'),
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post_delete'),
 ]
