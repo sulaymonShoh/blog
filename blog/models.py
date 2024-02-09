@@ -15,7 +15,7 @@ class AbstractModel(models.Model):
 
 
 class User(AbstractUser, AbstractModel):
-    avatar = models.ImageField(upload_to=avatar_path)
+    avatar = models.ImageField(upload_to=avatar_path, default='user_photos/default/default.jpg')
 
     @property
     def post_count(self):

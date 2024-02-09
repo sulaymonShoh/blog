@@ -3,11 +3,10 @@
 {% load static %}
 
 {% block body %}
-    `
+
     <main role="main" class="container">
         <div class="row">
             <div class="col-md-8">
-                {% include 'blog/messages.html' %}
 
                 {% for post in posts %}
                     <article class="media content-section">
@@ -15,7 +14,7 @@
                         <div class="media-body">
                             <div class="article-metadata">
                                 <a class="mr-2"
-                                   href="{% url 'blog:user-post' post.author %}">{{ post.author.first_name }} {{ post.auhtor.last_name }}</a>
+                                   href="{% url 'blog:user-post' post.author.username %}">{{ post.author.first_name }} {{ post.auhtor.last_name }}</a>
                                 <small class="text-muted">{{ post.published }}</small>
                             </div>
                             <h5><a class="article-title"

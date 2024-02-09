@@ -2,38 +2,32 @@
 
 {% block body %}
     <main role="main" class="container">
-      <div class="row">
-        <div class="col-md-8">
-              {% if messages %}
-                	{% for message in messages %}
-                        <div class="alert alert-{{ message.tags }}">
-                            <h6>Django messages might be shown here</h6>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="content-section">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        {#                            <fieldset class="form-group">#}
+                        {#                                <legend class="border-bottom mb-4">Blog Post</legend>#}
+                        {#                                <div class="form-group">#}
+                        {#                                    <label for="title">Title</label>#}
+                        {#                                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter the title">#}
+                        {#                                </div>#}
+                        {#                                #}
+                        {#                                <div class="form-group">#}
+                        {#                                    <label for="content">Content</label>#}
+                        {#                                    <textarea class="form-control" id="content" name="content" rows="4" placeholder="Enter the content"></textarea>#}
+                        {#                                </div>#}
+                        {#                            </fieldset>#}
+                        <div class="form-group">
+                            <button class="btn btn-outline-info" type="submit">Save</button>
                         </div>
-                	{% endfor %}
-                {% endif %}
-        
-                    <div class="content-section">
-                        <form method="post">
-                            <fieldset class="form-group">
-                                <legend class="border-bottom mb-4">Blog Post</legend>
-                                <div class="form-group">
-                                    <label for="title">Title</label>
-                                    <input type="text" class="form-control" id="title" name="title" placeholder="Enter the title">
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="content">Content</label>
-                                    <textarea class="form-control" id="content" name="content" rows="4" placeholder="Enter the content"></textarea>
-                                </div>
-                            </fieldset>
-                            <div class="form-group">
-                                <button class="btn btn-outline-info" type="submit">Save</button>
-                            </div>
-                        </form>
-                    </div>
+                    </form>
                 </div>
-                {% include 'blog/sidebar.html' %}
-              </div>
-            </main>
-        
+            </div>
+            {% include 'blog/sidebar.html' %}
+        </div>
+    </main>
+
 {% endblock %}

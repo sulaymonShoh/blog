@@ -34,7 +34,7 @@
 
 
                         <a class="nav-item nav-link" href="{% url 'blog:new-post' %}">New Post</a>
-                        <a class="nav-item nav-link" href="{% url 'blog:user-post' request.user %}">Profile</a>
+                        <a class="nav-item nav-link" href="{% url 'blog:user-post' request.user.username %}">Profile</a>
                         <a class="nav-item nav-link" href="{% url 'blog:logout' %}">Logout</a>
                     {% else %}
                         <a class="nav-item nav-link" href="{% url 'blog:login' %}">Login</a>
@@ -46,10 +46,15 @@
     </nav>
 </header>
 
+<body>
+<div class="container">
+    {% include 'blog/messages.html' %}
+</div>
 {% block body %}
 
 
 {% endblock %}
+</body>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
