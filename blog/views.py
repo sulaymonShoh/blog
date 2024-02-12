@@ -2,16 +2,15 @@ import datetime
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import authenticate, login, logout
-from .forms import RegisterForm, LoginForm, UserRegistrationForm, PostCreateForm
 from django.views import View
-from django.views.generic import TemplateView, ListView, DetailView, DeleteView, UpdateView, CreateView
+from django.views.generic import TemplateView, DetailView, DeleteView, UpdateView
 
 from blog.models import Post, User
+from blog.forms import LoginForm, UserRegistrationForm, PostCreateForm, PostUpdateForm
 
 
 class HomePageView(View):
@@ -36,23 +35,6 @@ class AboutView(TemplateView):
     template_name = 'blog/about.html'
 
 
-class NewPostView(View):
-    def get(self, request):
-        form = PostCreateForm
-        return render(request, 'blog/post_form.html', {"form": form})
-
-    def post(self, request):
-        form = PostCreateForm(request.POST)
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.published = datetime.datetime.now().strftime("%Y-%m-%d")
-            post.save()
-            messages.success(request, "Post successfully created")
-            return redirect("blog:home-page")
-        else:
-            return render(request, "blog/post_form.html", {"form": form})
-
 
 class PostDetailView(DetailView):
     model = Post
@@ -75,6 +57,24 @@ class PostDeleteView(SuccessMessageMixin, DeleteView):
     success_message = "Post deleted"
 
 
+class PostCreateView(View):
+    def get(self, request):
+        form = PostCreateForm()
+        return render(request, 'blog/post_form.html', {"form": form})
+
+    def post(self, request):
+        form = PostCreateForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.published = datetime.datetime.now().strftime("%Y-%m-%d")
+            post.save()
+            messages.success(request, "Post successfully created")
+            return redirect("blog:home-page")
+        else:
+            return render(request, "blog/post_form.html", {"form": form})
+
+
 class UserProfileView(View):
     def get(self, request, username, ):
         user = get_object_or_404(User, username=username)
@@ -90,14 +90,15 @@ class UserProfileView(View):
 
 class RegisterView(View):
     def get(self, request):
-        form = RegisterForm()
+        form = UserRegistrationForm()
         return render(request, 'blog/register.html', {'form': form})
 
     def post(self, request):
-        form = RegisterForm(request.POST)
+        form = UserRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
-            login(request, user)
+            # login(request, user)
+            messages.success(request, "User Successfully created")
             return redirect('blog:login')
         return render(request, 'blog/register.html', {'form': form})
 
@@ -116,9 +117,9 @@ class LoginView(View):
             if user is not None:
                 login(request, user)
                 messages.success(request, 'Logged in successfully')
-                return redirect('blog:home-page')
+                return redirect('blog:home_page')
 
-        messages.error(request, 'Username or password wrong')
+        messages.warning(request, 'Username or password wrong')
         return render(request, 'blog/login.html', {'form': form})
 
 
@@ -126,7 +127,8 @@ class LogoutView(View):
     def get(self, request):
         logout(request)
         messages.info(request, 'Logged out successfully')
-        return redirect('blog:home-page')
+        return redirect('blog:home_page')
+
 
 # function based views
 
@@ -201,3 +203,30 @@ class LogoutView(View):
 #     else:
 #         form = PostCreateForm()
 #         return render(request, "blog/post_form.html", {"form": form})
+
+
+@login_required
+def post_update(request, pk: int):
+    post = Post.objects.get(pk=pk)
+    if request.method == "POST":
+        form = PostUpdateForm(data=request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Post updated successfully")
+            return redirect(reverse("blog:post_detail", kwargs={"pk": post.id}))
+        else:
+            return render(request, 'blog/post_update.html', {"form": form})
+    else:
+        form = PostUpdateForm(instance=post)
+        return render(request, "blog/post_update.html", {"form": form})
+
+
+@login_required
+def post_delete_view(request, pk):
+    post = Post.objects.get(pk=pk)
+    if request.method == "POST":
+        post.delete()
+        messages.success(request, "Post deleted successfully")
+        return redirect("blog:home-page")
+    else:
+        return render(request, "blog/post_confirm_delete.html", {"post": post})

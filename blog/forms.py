@@ -2,6 +2,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.exceptions import ValidationError
+from django.db.models.functions import datetime
 
 from .models import User, Post
 
@@ -21,9 +22,8 @@ class RegisterForm(UserCreationForm):
 
 # for funcition based views
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=28, widget=forms.TextInput(attrs={"class": "form-control", "id": "username"}))
-    password = forms.CharField(max_length=28, widget=forms.TextInput(
-        attrs={"class": "form-control", "id": "password", "type": "password"}))
+    username = forms.CharField(max_length=28)
+    password = forms.CharField(max_length=28)
 
 
 class UserRegistrationForm(forms.ModelForm):
@@ -32,7 +32,7 @@ class UserRegistrationForm(forms.ModelForm):
     password2 = forms.CharField(max_length=28, widget=forms.TextInput(
         attrs={"id": "password", "type": "password"}))
 
-    avatar = forms.FileField
+    avatar = forms.FileField()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -62,4 +62,10 @@ class PostCreateForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ["title", "content"]
+        fields = ["title", "content", "is_active"]
+
+
+class PostUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ["title", "content", "is_active"]

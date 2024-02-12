@@ -7,20 +7,27 @@
 
                 <h1 class="mb-3">Posts by {{ first_name }} {{ last_name }}</h1>
 
-            {% for post in posts %}
-                <article class="media content-section">
-                    <img class="rounded-circle article-img" src="{{ post.author.avatar.url }}">
-                    <div class="media-body">
-                        <div class="article-metadata">
-                            <a class="mr-2" href="">{{ post.author.first_name }} {{ post.author.last_name }}</a>
-                            <small class="text-muted">{{ post.published }}</small>
-                        </div>
-                        <h2><a class="article-title" href="{% url 'blog:post_detail' post.id %}">{{ post.title }}</a></h2>
+                {% for post in posts %}
+                    <article class="media content-section">
+                        <img class="rounded-circle article-img" src="{{ post.author.avatar.url }}">
+                        <div class="media-body">
+                            <div class="article-metadata">
+                                <a class="mr-2" href="">{{ post.author.first_name }} {{ post.author.last_name }}</a>
+                                <small class="text-muted">{{ post.published }}</small>
+                            </div>
+                            <h2><a class="article-title"
+                                   href="{% url 'blog:post_detail' post.id %}">{{ post.title }}</a></h2>
                             <p class="article-content">{{ post.content }}</p>
-                    </div>
-                </article>
-                
-            {% endfor %}
+                        </div>
+                    </article>
+                {% empty %}
+                <div class="alert alert-dark">
+                <h2 class="m-2 mb-4">No posts</h2>
+                    <a href="{% url 'blog:post_create' %}" class="btn btn-primary">Write new post</a>
+                    <a href="{% url 'blog:home_page' %}" class="btn btn-secondary">Back to Homepage</a>
+                </div>
+
+                {% endfor %}
 
 
             </div>
