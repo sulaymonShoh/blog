@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.paginator import Paginator
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import authenticate, login, logout
 from django.views import View
@@ -19,7 +20,12 @@ class HomePageView(View):
             posts = Post.objects.exclude(author=request.user).filter(is_active=True).order_by('published')
         else:
             posts = Post.objects.all().filter(is_active=True).order_by('published')
-        return render(request, 'blog/home.html', {'posts': posts})
+
+        size = request.GET.get("size", 6)
+        page = request.GET.get("page", 1)
+        paginator = Paginator(posts, size)
+        page_obj = paginator.get_page(page)
+        return render(request, 'blog/home.html', {'page_obj': page_obj, "num_pages": paginator.num_pages})
 
 
 # def home_page(request):
@@ -33,7 +39,6 @@ class HomePageView(View):
 
 class AboutView(TemplateView):
     template_name = 'blog/about.html'
-
 
 
 class PostDetailView(DetailView):
@@ -53,7 +58,7 @@ class PostUpdateView(UpdateView):
 class PostDeleteView(SuccessMessageMixin, DeleteView):
     model = Post
     template_name = 'blog/post_confirm_delete.html'
-    success_url = reverse_lazy('blog:home-page')
+    success_url = reverse_lazy('blog:home_page')
     success_message = "Post deleted"
 
 
@@ -70,7 +75,7 @@ class PostCreateView(View):
             post.published = datetime.datetime.now().strftime("%Y-%m-%d")
             post.save()
             messages.success(request, "Post successfully created")
-            return redirect("blog:home-page")
+            return redirect("blog:home_page")
         else:
             return render(request, "blog/post_form.html", {"form": form})
 
@@ -81,7 +86,12 @@ class UserProfileView(View):
         posts = Post.objects.filter(author__username=username)
         first_name = user.first_name
         last_name = user.last_name
-        return render(request, 'blog/user_posts.html', {'posts': posts,
+
+        size = request.GET.get("size", 6)
+        page = request.GET.get("page", 1)
+        paginator = Paginator(posts, size)
+        page_obj = paginator.get_page(page)
+        return render(request, 'blog/user_posts.html', {'page_obj': page_obj,
                                                         'first_name': first_name,
                                                         'last_name': last_name})
 
